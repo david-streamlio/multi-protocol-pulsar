@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  broker-1:
+    image: streamnative/sn-pulsar:2.10.1.4
+    container_name: broker-1
+    hostname: broker-1
+    command: >
+      bash -c "bin/apply-config-from-env.py conf/broker.conf &&
+      exec bin/pulsar broker"
+    environment:
+      PULSAR_PREFIX_messagingProtocols: kafka, amqp, mqtt
+      PULSAR_PREFIX_allowAutoTopicCreationType: partitioned
+      PULSAR_PREFIX_kafkaTransactionCoordinatorEnabled: "true"
+      PULSAR_PREFIX_brokerDeleteInactiveTopicsEnabled: "false"
+      PULSAR_PREFIX_kafkaListeners: PLAINTEXT://0.0.0.0:9092
+      PULSAR_PREFIX_kafkaAdvertisedListeners: PLAINTEXT://broker-1:9092
+      PULSAR_PREFIX_brokerEntryMetadataInterceptors: org.apache.pulsar.common.intercept.AppendIndexMetadataInterceptor
+      PULSAR_PREFIX_zookeeperServers: zookeeper:2181
+      PULSAR_PREFIX_configurationStoreServers: zookeeper:2181
+      PULSAR_PREFIX_clusterName: pulsar-cluster
+      PULSAR_PREFIX_managedLedgerDefaultEnsembleSize: 1
+      PULSAR_PREFIX_managedLedgerDefaultWriteQuorum: 1
+      PULSAR_PREFIX_managedLedgerDefaultAckQuorum: 1
+      PULSAR_PREFIX_amqpListeners: amqp://broker-1:5672
+      PULSAR_PREFIX_mqttListeners: mqtt://broker-1:1883
+    ports:
+      - 6650:6650 # Pulsar Binary
+      - 8080:8080
+      - 9092:9092 # Kafka Binary
+      - 5672:5672 # AMQP
+      - 1883:1883 # MQTT
+    healthcheck:
+      interval: 5s
+      retries: 20
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8080/admin/v2/clusters/pulsar-cluster
+
+networks:
+  default:
+    name: multi-protocol-pulsar
+    external: true
