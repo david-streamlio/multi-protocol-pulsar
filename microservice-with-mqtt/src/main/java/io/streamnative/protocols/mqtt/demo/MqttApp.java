@@ -23,7 +23,6 @@ import static io.streamnative.protocols.mqtt.demo.Constants.TOPIC_NAME;
 @SpringBootApplication
 public class MqttApp implements CommandLineRunner {
 
-    private static final String MQTT_MSG = "I am using MQTT to talk to Pulsar 😄";
     private final Logger logger = LoggerFactory.getLogger(MqttApp.class);
 
     public static void main(String[] args) {
@@ -45,9 +44,10 @@ public class MqttApp implements CommandLineRunner {
     }
 
     private void sendData() {
-        String msg = MQTT_MSG + "-" + ++msgCounter;
         try {
-            connection.publish(TOPIC_NAME, msg.getBytes(), QoS.AT_LEAST_ONCE, false);
+            connection.publish(TOPIC_NAME,
+                    String.format("%s - %d", Constants.THE_MOUSE_SAYS, ++msgCounter).getBytes(),
+                    QoS.AT_LEAST_ONCE, false);
         } catch (Exception e) {
             logger.error("Failure to send", e);
         }

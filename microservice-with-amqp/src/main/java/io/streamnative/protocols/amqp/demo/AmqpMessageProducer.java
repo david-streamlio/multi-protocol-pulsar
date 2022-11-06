@@ -4,31 +4,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static io.streamnative.protocols.amqp.demo.Constants.*;
 
 @Service
 public class AmqpMessageProducer {
 
-    private final Logger logger = LoggerFactory.getLogger(AmqpMessageProducer.class);
-
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Scheduled(fixedRate = 5000)
-    public void sendMessage() {
-        final String message = "I am using AMQP to talk to Pulsar 😄";
-        rabbitTemplate.convertAndSend(TOPIC_NAME, message);
-    }
+    private int msgCounter = 0;
 
-    @RabbitListener(queues = TOPIC_NAME)
-    public void listen(String message) {
-        logger.info(message);
+    @Scheduled(fixedRate = 2000)
+    public void sendMessage() {
+        rabbitTemplate.convertAndSend(Constants.TOPIC_NAME,
+                String.format("%s - %d", Constants.THE_RABBIT_SAYS, ++msgCounter));
     }
 
 }

@@ -24,8 +24,7 @@ public class KafkaMessageProducer {
 
     @Scheduled(fixedRate = 5000)
     public void forgetAndMoveOn() {
-        final String message = "I am using Kafka to talk to Pulsar 😄";
-        kafkaTemplate.send(TOPIC_NAME, String.format("%s - %d", message, ++msgCounter));
+        kafkaTemplate.send(TOPIC_NAME, String.format("%s - %d", THE_DOG_SAYS, ++msgCounter));
     }
 
 }
