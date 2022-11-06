@@ -3,12 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.streamnative.protocols.demo</groupId>
-    <artifactId>amqp-microservice</artifactId>
+    <groupId>io.streamnative.protocols.mqtt.demo</groupId>
+    <artifactId>mqtt-microservice</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Spring Boot Microservice using Apache Pulsar with AMQP enabled</name>
+    <name>Spring Boot Microservice using Apache Pulsar with MQTT enabled</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -20,7 +20,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>io.streamnative.protocols.demo.AmqpApp</start-class>
+        <start-class>io.streamnative.protocols.mqtt.demo.MqttApp</start-class>
     </properties>
 
     <dependencies>
@@ -29,12 +29,17 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
         <dependency>
-            <groupId>org.springframework.amqp</groupId>
-            <artifactId>spring-rabbit</artifactId>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-mqtt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.mqtt-client</groupId>
+            <artifactId>mqtt-client</artifactId>
+            <version>1.16</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
