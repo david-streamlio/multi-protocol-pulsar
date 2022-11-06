@@ -28,7 +28,7 @@ public class MqttMessageConsumer implements Runnable {
             while (true) {
                 Message received = connection.receive(10, TimeUnit.SECONDS);
                 if (received != null) {
-                    logger.info("Received [" + new String(received.getPayload()) + "]");
+                    logger.info(String.format("Received [%s]", new String(received.getPayload())));
                     received.ack();
                 } else {
                     logger.info("Receive timed out");

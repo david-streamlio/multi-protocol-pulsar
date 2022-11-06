@@ -20,15 +20,12 @@ public class KafkaMessageProducer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    private int msgCounter = 0;
+
     @Scheduled(fixedRate = 5000)
     public void forgetAndMoveOn() {
         final String message = "I am using Kafka to talk to Pulsar 😄";
-        kafkaTemplate.send(TOPIC_NAME, message);
-    }
-
-    @KafkaListener(topics = Constants.TOPIC_NAME)
-    public void sayHi(@Payload String message) {
-        logger.info(message);
+        kafkaTemplate.send(TOPIC_NAME, String.format("%s - %d", message, ++msgCounter));
     }
 
 }
