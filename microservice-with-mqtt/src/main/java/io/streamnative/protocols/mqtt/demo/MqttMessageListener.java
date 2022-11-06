@@ -6,15 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class MqttMessageConsumer implements Runnable {
+public class MqttMessageListener implements Runnable {
 
-    private final Logger logger = LoggerFactory.getLogger(MqttMessageConsumer.class);
+    private final Logger logger = LoggerFactory.getLogger(MqttMessageListener.class);
 
     private final BlockingConnection connection;
 
     private boolean subscribed = false;
 
-    public MqttMessageConsumer(BlockingConnection connection) {
+    public MqttMessageListener(BlockingConnection connection) {
         this.connection = connection;
     }
 

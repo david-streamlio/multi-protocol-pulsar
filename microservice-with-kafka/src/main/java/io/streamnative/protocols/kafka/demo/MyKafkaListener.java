@@ -7,9 +7,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaMessageConsumer {
+public class MyKafkaListener {
 
-    private final Logger logger = LoggerFactory.getLogger(KafkaMessageConsumer.class);
+    private final Logger logger = LoggerFactory.getLogger(MyKafkaListener.class);
 
     @KafkaListener(topics = Constants.TOPIC_NAME)
     public void sayHi(@Payload String message) {

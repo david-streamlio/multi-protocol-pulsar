@@ -4,18 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import static io.streamnative.protocols.kafka.demo.Constants.*;
 
 @Service
-public class KafkaMessageProducer {
+public class MyKafkaProducer {
 
-    private final Logger logger = LoggerFactory.getLogger(KafkaMessageProducer.class);
+    private final Logger logger = LoggerFactory.getLogger(MyKafkaProducer.class);
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;

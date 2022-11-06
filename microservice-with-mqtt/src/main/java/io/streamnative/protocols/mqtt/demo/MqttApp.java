@@ -46,7 +46,7 @@ public class MqttApp implements CommandLineRunner {
     private void sendData() {
         try {
             connection.publish(TOPIC_NAME,
-                    String.format("%s - %d", Constants.THE_MOUSE_SAYS, ++msgCounter).getBytes(),
+                    String.format("%s - %d", Constants.THE_CAT_SAYS, ++msgCounter).getBytes(),
                     QoS.AT_LEAST_ONCE, false);
         } catch (Exception e) {
             logger.error("Failure to send", e);
@@ -56,7 +56,7 @@ public class MqttApp implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         logger.info("Starting the MQTT consumer");
-        taskExecutor.execute(new MqttMessageConsumer(connection));
+        taskExecutor.execute(new MqttMessageListener(connection));
     }
 
 }
