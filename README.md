@@ -22,7 +22,7 @@ sh start-persistence.sh
 
 👀 You must wait until the containers `zookeeper`, `persistence-bookie-1`, and `persistence-bookie-2` are healthy to proceed with the next step.
 
-2️⃣ Start the Pulsar brokers with KoP enabled
+2️⃣ Start the Pulsar brokers with AoP, KoP, and MoP enabled
 
 ```bash
 sh start-brokers.sh
@@ -54,13 +54,35 @@ You need to make sure that Pulsar Manager is able to access the service url. In 
 This will create the environment and allow you to manage the Pulsar cluster from the Pulsar Manager UI.
 
 
+✅ Scenario: Microservice built for AMQP
+-------------------------------------------------
+
+This scenario checks two things. First, if AoP provides a truly AMQP-compatible API where third-party frameworks such as [Spring Boot](https://spring.io/projects/spring-boot) can connect with without deployment problems. Second, to check whether we can both send and receive messages using the AMQP protocol using Pulsar.
+1️⃣ Run the Spring Boot microservice
+
+```bash
+sh microservice-with-amqp/run-microservice.sh
+```
+
+👀 You must wait until the microservice connects with the brokers and start producing and consuming messages like this:
+
+```console
+i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 1]
+```
+
+2️⃣ stop the microservice using Ctrl+C.
+
+
+3️⃣ Remove the microservice container using the following command:
+
+```console
+docker rm aop-micro
+```
+
 ✅ Scenario: Microservice built for Apache Kafka
 -------------------------------------------------
 
-This scenario checks two things. First, if KoP provides a truly Kafka-compatible API where third-party frameworks such as [Spring Boot](https://spring.io/projects/spring-boot) can connect with without deployment problems. Second, to check whether KoP is capable of mimic the distributed protocol from Kafka. Kafka is not just a one-directional typical client-server protocol. Instead, it is a bi-directional protocol where messages are exchanged from both parties. A good example is when a producer connects to the Kafka cluster using one bootstrap server endpoint, and the cluster keeps periodically updating that list back to the producer with metadata about the new cluster formation. Same for the consumer, which after joining a group, may be eventually removed by the cluster for the absence of valid heartbeats.
-
-To validate this scenario, two Apache Pulsar brokers with KoP enabled will be executed, and the microservice will use the endpoint of only one broker to bootstrap the cluster. When everything is up-and-running and working as expected, the broker being used by the microservice will be killed, and the assumption is that the microservice should fallback to the other available broker, and continue its execution. If that ever happens, it means that the bootstrap worked as expected, giving the specifications of how Kafka manages clusters and sends this information to its clients.
-
+This scenario checks two things. First, if KoP provides a truly Kafka-compatible API where third-party frameworks such as [Spring Boot](https://spring.io/projects/spring-boot) can connect with without deployment problems. Second, to check whether we can both send and receive messages using the Kafka protocol using Pulsar.
 1️⃣ Run the Spring Boot microservice
 
 ```bash
@@ -70,10 +92,165 @@ sh microservice-with-kafka/run-microservice.sh
 👀 You must wait until the microservice connects with the brokers and start producing and consuming messages like this:
 
 ```console
-io.streamnative.protocols.kafka.demo.KafkaMessageProducer : I am using Kafka to talk to Pulsar 😄
+i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to talk to Pulsar - 1]
 ```
 
-#️⃣ stop all containers if you're done for the day.
+2️⃣ stop the microservice using Ctrl+C.
+
+3️⃣ Remove the microservice container using the following command:
+
+```console
+docker rm kop-micro
+```
+
+
+✅ Scenario: Microservice built for MQTT
+-------------------------------------------------
+
+This scenario checks two things. First, if MoP provides a truly MQTT-compatible API where third-party frameworks such as [Spring Boot](https://spring.io/projects/spring-boot) can connect with without deployment problems. Second, to check whether we can both send and receive messages using the MQTT protocol using Pulsar.
+1️⃣ Run the Spring Boot microservice
+
+```bash
+sh microservice-with-mqtt/run-microservice.sh
+```
+
+👀 You must wait until the microservice connects with the brokers and start producing and consuming messages like this:
+
+```console
+i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to talk to Pulsar - 1]
+```
+
+2️⃣ stop the microservice if you're done for the day using Ctrl+C.
+
+
+3️⃣ Remove the microservice container using the following command:
+
+```console
+docker rm mop-micro
+```
+
+
+✅ Scenario: Microservice built for Pulsar
+-------------------------------------------------
+
+This scenario tests the Pulsar integration with the [Spring Boot](https://spring.io/projects/spring-boot) frameworks. Can we connect with without deployment problems as well as send and receive messages using the `spring-pulsar-spring-boot-starter`.
+1️⃣ Run the Spring Boot microservice
+
+```bash
+sh microservice-with-pulsar/run-microservice.sh
+```
+
+👀 You must wait until the microservice connects with the brokers and start producing and consuming messages like this:
+
+```console
+i.s.p.pulsar.demo.MyPulsarListener       : Received [🦄 - I am using Pulsar to talk to Pulsar - 1]
+```
+
+2️⃣ stop the microservice if you're done for the day using Ctrl+C.
+
+
+3️⃣ Remove the microservice container using the following command:
+
+```console
+docker rm pop-micro
+```
+
+
+✅ Scenario: Everyone Publishes to the same topic using different protocols
+-------------------------------------------------
+
+This scenario tests if clients using different messaging protocols (AoP, MoP, KoP, and Native Pulsar) can exchange messages on a single common topic.
+
+1️⃣ Run the Spring Boot Aop microservice
+
+```bash
+sh microservice-with-amqp/run-microservice.sh
+```
+
+👀 The console for the AMQP microservice shows that it only ever consumes messages published using the AMQP protocol:
+
+```console
+2022-11-07 02:30:20.887  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 110]
+2022-11-07 02:30:22.887  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 111]
+2022-11-07 02:30:24.886  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 112]
+2022-11-07 02:30:26.891  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 113]
+2022-11-07 02:30:28.888  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 114]
+2022-11-07 02:30:30.889  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 115]
+2022-11-07 02:30:32.890  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 116]
+2022-11-07 02:30:34.888  INFO 1 --- [ntContainer#0-1] i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to talk to Pulsar - 117]
+```
+
+2️⃣ In another console window, start the Spring Boot MoP microservice
+
+```bash
+sh microservice-with-mqtt/run-microservice.sh
+```
+
+3️⃣ In another console window, start the Spring Boot Kafka microservice
+
+```bash
+sh microservice-with-kafka/run-microservice.sh
+```
+
+4️⃣ Finally, in another console window, start the Spring Boot Pulsar microservice
+
+```bash
+sh microservice-with-pulsar/run-microservice.sh
+```
+
+👀 Observe the fact that messages from different protocols are getting received by the MoP, KoP, and Pulsar microservices:
+
+In the MoP microservice console:
+
+```console
+2022-11-07 02:30:29.611  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🦄 - I am using Pulsar to talk to Pulsar - 6]
+2022-11-07 02:30:30.883  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐰 - I am using AMQP to talk to Pulsar - 115]
+2022-11-07 02:30:30.930  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐶 - I am using Kafka to talk to Pulsar - 17]
+2022-11-07 02:30:31.202  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to talk to Pulsar - 33]
+2022-11-07 02:30:32.885  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐰 - I am using AMQP to talk to Pulsar - 116]
+2022-11-07 02:30:33.202  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to talk to Pulsar - 34]
+2022-11-07 02:30:34.608  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🦄 - I am using Pulsar to talk to Pulsar - 7]
+2022-11-07 02:30:34.882  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐰 - I am using AMQP to talk to Pulsar - 117]
+2022-11-07 02:30:35.203  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to talk to Pulsar - 35]
+2022-11-07 02:30:35.933  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐶 - I am using Kafka to talk to Pulsar - 18]
+2022-11-07 02:30:37.204  INFO 1 --- [lTaskExecutor-1] i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to talk to Pulsar - 36]
+```
+
+In the Kafka microservice console:
+
+```console
+2022-11-07 02:30:33.257  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐱 - I am using MQTT to talk to Pulsar - 34]
+2022-11-07 02:30:34.764  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🦄 - I am using Pulsar to talk to Pulsar - 7]
+2022-11-07 02:30:35.268  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐰 - I am using AMQP to talk to Pulsar - 117]
+2022-11-07 02:30:35.268  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐱 - I am using MQTT to talk to Pulsar - 35]
+2022-11-07 02:30:36.276  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to talk to Pulsar - 18]
+2022-11-07 02:30:37.281  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐱 - I am using MQTT to talk to Pulsar - 36]
+2022-11-07 02:30:39.790  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🦄 - I am using Pulsar to talk to Pulsar - 8]
+2022-11-07 02:30:41.296  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to talk to Pulsar - 19]
+2022-11-07 02:30:46.298  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to talk to Pulsar - 20]
+2022-11-07 02:30:51.317  INFO 1 --- [ntainer#0-0-C-1] i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to talk to Pulsar - 21]
+```
+
+In the Pulsar microservice console:
+
+```console
+2022-11-07T02:30:32.981Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐰 - I am using AMQP to talk to Pulsar - 116]
+2022-11-07T02:30:33.287Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐱 - I am using MQTT to talk to Pulsar - 34]
+2022-11-07T02:30:34.708Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🦄 - I am using Pulsar to talk to Pulsar - 7]
+2022-11-07T02:30:34.912Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐰 - I am using AMQP to talk to Pulsar - 117]
+2022-11-07T02:30:35.217Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐱 - I am using MQTT to talk to Pulsar - 35]
+2022-11-07T02:30:36.028Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐶 - I am using Kafka to talk to Pulsar - 18]
+2022-11-07T02:30:37.243Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐱 - I am using MQTT to talk to Pulsar - 36]
+2022-11-07T02:30:39.675Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🦄 - I am using Pulsar to talk to Pulsar - 8]
+2022-11-07T02:30:40.991Z  INFO 1 --- [ntainer#0-0-C-1] i.s.p.pulsar.demo.MyPulsarListener       : Received [🐶 - I am using Kafka to talk to Pulsar - 19]
+```
+
+Pretty cool, huh?
+
+✅ Shutting down
+-------------------------------------------------
+
+When you are finished with your testing, you can stop all docker containers using the following command:
 
 ```bash
 sh stop-everything.sh
