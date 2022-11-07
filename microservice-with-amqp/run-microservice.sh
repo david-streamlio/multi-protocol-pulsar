@@ -9,11 +9,7 @@ then
   cd $msWithAmqpFolder
 fi
 
-# mvn clean package -Dmaven.test.skip=true
-
-# docker run -it --rm --name amqp -v "$PWD":/usr/src/app \
-#       -v "$HOME"/.m2:/root/.m2 \
-#       -w /usr/src/app maven:3.8-openjdk-17 mvn clean package
+mvn clean package -Dmaven.test.skip=true
 
 docker build . -t aop/microservice:1.0
 
