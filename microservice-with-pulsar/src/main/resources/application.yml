@@ -1,0 +1,8 @@
+logging:
+  level:
+    org.apache.pulsar: error
+
+spring:
+  pulsar:
+    client:
+      service-url: pulsar://broker-1:6650

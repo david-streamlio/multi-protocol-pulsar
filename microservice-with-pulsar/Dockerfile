@@ -5,4 +5,4 @@ ADD . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
-ENTRYPOINT [ "java", "-jar", "target/kafka-microservice-1.0.jar" ]
+ENTRYPOINT [ "java", "-jar", "target/pulsar-microservice-1.0.jar" ]
