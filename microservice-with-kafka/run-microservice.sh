@@ -12,6 +12,6 @@ mvn clean package -Dmaven.test.skip=true
 
 docker build . -t kop/microservice:1.0
 
-docker run --name kop-micro -e BOOTSTRAP_SERVERS='broker-1:9092' \
+docker run --rm --name kop-micro -e BOOTSTRAP_SERVERS='broker-1:9092' \
        --network="multi-protocol-pulsar" \
        -t kop/microservice:1.0

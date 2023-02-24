@@ -12,6 +12,6 @@ mvn clean package -Dmaven.test.skip=true
 
 docker build . -t pop/microservice:1.0
 
-docker run --name pop-micro  \
+docker run --rm --name pop-micro  \
        --network="multi-protocol-pulsar" \
        -t pop/microservice:1.0

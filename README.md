@@ -72,13 +72,6 @@ i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to t
 
 2️⃣ stop the microservice using Ctrl+C.
 
-
-3️⃣ Remove the microservice container using the following command:
-
-```console
-docker rm aop-micro
-```
-
 ✅ Scenario: Microservice built for Apache Kafka
 -------------------------------------------------
 
@@ -96,12 +89,6 @@ i.s.p.kafka.demo.MyKafkaListener         : Received [🐶 - I am using Kafka to 
 ```
 
 2️⃣ stop the microservice using Ctrl+C.
-
-3️⃣ Remove the microservice container using the following command:
-
-```console
-docker rm kop-micro
-```
 
 
 ✅ Scenario: Microservice built for MQTT
@@ -123,13 +110,6 @@ i.s.p.mqtt.demo.MqttMessageListener      : Received [🐱 - I am using MQTT to t
 2️⃣ stop the microservice if you're done for the day using Ctrl+C.
 
 
-3️⃣ Remove the microservice container using the following command:
-
-```console
-docker rm mop-micro
-```
-
-
 ✅ Scenario: Microservice built for Pulsar
 -------------------------------------------------
 
@@ -147,13 +127,6 @@ i.s.p.pulsar.demo.MyPulsarListener       : Received [🦄 - I am using Pulsar to
 ```
 
 2️⃣ stop the microservice if you're done for the day using Ctrl+C.
-
-
-3️⃣ Remove the microservice container using the following command:
-
-```console
-docker rm pop-micro
-```
 
 
 ✅ Scenario: Everyone Publishes to the same topic using different protocols
