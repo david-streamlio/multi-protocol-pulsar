@@ -9,6 +9,10 @@ Requirements
 - [Apache Pulsar](https://pulsar.apache.org/download) 2.10.1+
 - [Confluent Platform](https://www.confluent.io/get-started/?product=software) 7.0.5+
 
+Ensure you have allocated enough memory to Docker: at least 8Gb.
+
+On Macs with ARM chip, enabling Rosetta for amd64 emulation on Docker will make your containers boot faster.
+
 🏢 Shared Apache Pulsar Infrastructure
 --------------------------------------
 
