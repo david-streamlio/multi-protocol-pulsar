@@ -11,7 +11,7 @@ public class MyKafkaListener {
 
     private final Logger logger = LoggerFactory.getLogger(MyKafkaListener.class);
 
-    @KafkaListener(topics = Constants.TOPIC_NAME)
+    @KafkaListener(topics = Constants.TOPIC_NAME, properties = {"auto.offset.reset = latest"})
     public void sayHi(@Payload String message) {
         logger.info(String.format("Received [%s]", message));
     }
