@@ -2,7 +2,7 @@ package io.streamnative.protocols.mqtt.demo;
 
 public interface Constants {
 
-    public static final String TOPIC_NAME = "persistent://public/vhost1/__amqp_exchange__aop.direct.durable";
+    public static final String TOPIC_NAME = "persistent://public/default/multi-protocol";
 
     static final String CAT = "🐱";
 
