@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   zookeeper:
-    image: streamnative/sn-pulsar:2.10.3.4
+    image: streamnative/sn-pulsar:2.10.4.3
     container_name: zookeeper
     hostname: zookeeper
     command: >
@@ -28,7 +28,7 @@ services:
       bash -c "bin/pulsar initialize-cluster-metadata -c pulsar-cluster -zk zookeeper:2181 -cs zookeeper:2181 -uw http://pulsar-cluster-kafka-1:8080,pulsar-cluster-kafka-2:8080"
 
   bookie:
-    image: streamnative/sn-pulsar:2.10.3.4
+    image: streamnative/sn-pulsar:2.10.4.3
     deploy:
       mode: replicated
       replicas: 2

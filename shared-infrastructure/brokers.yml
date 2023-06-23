@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   broker-1:
-    image: streamnative/sn-pulsar:2.10.3.4
+    image: streamnative/sn-pulsar:2.10.4.3
     container_name: broker-1
     hostname: broker-1
     command: >
