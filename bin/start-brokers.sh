@@ -12,5 +12,5 @@ sleep 15
 ################################################
 # Create namespace and set policies
 ################################################
-docker exec -it broker-1 /pulsar/bin/pulsar-admin namespaces create -b 1 public/vhost1
-docker exec -it broker-1 /pulsar/bin/pulsar-admin namespaces set-retention -s 100M -t 2d  public/vhost1
+# docker exec -it broker-1 /pulsar/bin/pulsar-admin namespaces create -b 1 public/vhost1
+# docker exec -it broker-1 /pulsar/bin/pulsar-admin namespaces set-retention -s 100M -t 2d  public/vhost1
