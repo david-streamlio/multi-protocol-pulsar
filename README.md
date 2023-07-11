@@ -76,6 +76,28 @@ i.s.protocols.amqp.demo.MyAmqpListener   : Received [🐰 - I am using AMQP to t
 
 2️⃣ stop the microservice using Ctrl+C.
 
+
+✅ Scenario: Microservice built for JMS
+-------------------------------------------------
+
+This scenario checks two things. First, if Pulsar provides a truly JMS-compatible API where third-party frameworks such as [Spring Boot](https://spring.io/projects/spring-boot) can connect with without deployment problems. Second, to check whether we can both send and receive messages with the JMS protocol using Pulsar.
+1️⃣ Run the Spring Boot microservice
+
+```bash
+sh microservice-with-jms/run-microservice.sh
+```
+
+👀 You must wait until the microservice connects with the brokers and start producing and consuming messages like this:
+
+```console
+i.s.protocols.jms.demo.MyJmsListener     : Received [🦊️ - I am using JMS to talk to Pulsar - 1]
+i.s.protocols.jms.demo.MyJmsListener     : Received [🦊️ - I am using JMS to talk to Pulsar - 2]
+i.s.protocols.jms.demo.MyJmsListener     : Received [🦊️ - I am using JMS to talk to Pulsar - 3]
+i.s.protocols.jms.demo.MyJmsListener     : Received [🦊️ - I am using JMS to talk to Pulsar - 4]
+```
+
+2️⃣ stop the microservice using Ctrl+C.
+
 ✅ Scenario: Microservice built for Apache Kafka
 -------------------------------------------------
 
@@ -232,3 +254,8 @@ When you are finished with your testing, you can stop all docker containers usin
 ```bash
 sh stop-everything.sh
 ```
+
+
+References
+-------------------------------------------------
+1. https://docs.spring.io/spring-pulsar/docs/current-SNAPSHOT/reference/html/#_introduction

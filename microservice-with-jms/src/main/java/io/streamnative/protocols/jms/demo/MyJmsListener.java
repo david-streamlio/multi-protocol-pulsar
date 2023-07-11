@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 public class MyJmsListener {
 
     private final Logger logger = LoggerFactory.getLogger(MyJmsListener.class);
-
-    @JmsListener(destination = Constants.QUEUE_NAME, containerFactory = "myJmsContainerFactory")
-    public void receiveMessage(String message) {
-        logger.info(String.format("Received [%s]", message));
+    @JmsListener(destination = Constants.QUEUE_NAME,
+            containerFactory = "myJmsContainerFactory",
+            selector = "priority = 'high'")
+    public void receiveMessage(byte[] message) {
+        logger.info(String.format("Received [%s]", new String(message)));
     }
 }
